@@ -25,7 +25,7 @@ class Category(Base):
 class Product(Base):
     __tablename__ = "product"
 
-    id = Column(Integer, primary_key=True, nullable=False)
+    id = Column(Integer, Identity(), primary_key=True, nullable=False)
     name = Column(String(255), unique=True, nullable=False)
     slug = Column(String(255), unique=True, nullable=False)
     description = Column(Text)

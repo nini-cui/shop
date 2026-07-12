@@ -14,8 +14,6 @@ class Product(BaseModel):
     description: str | None = None
     price: float
     stock_quantity: int
-    created_at: datetime
-    updated_at: datetime
 
 class ProductCategory(BaseModel):
     product_id: int

@@ -6,7 +6,7 @@ app = FastAPI()
 
 @app.post("/products")
 def add_product(
-    payload: models.ProductCreate,
+    payload: models.Product,
     db: Session = Depends(deps.get_db)
 ):
     print("payload is: ", payload)
