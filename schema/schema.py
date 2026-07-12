@@ -31,8 +31,8 @@ class Product(Base):
     description = Column(Text)
     price = Column(Float, nullable=False)
     stock_quantity = Column(Integer, nullable=False)
-    created_at = Column(DateTime)
-    updated_at = Column(DateTime)
+    created_at = Column(DateTime, server_default=func.now())
+    updated_at = Column(DateTime, server_default=func.now())
 
 class ProductCategory(Base):
     __tablename__ = "product_category"
