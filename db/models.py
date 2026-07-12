@@ -17,12 +17,6 @@ class Product(BaseModel):
     created_at: datetime
     updated_at: datetime
 
-class ProductCreate(BaseModel):
-    id: int
-    name: str
-    slug: str
-    description: str | None = None
-    price: float
-    stock_quantity: int
-    created_at: datetime
-    updated_at: datetime
+class ProductCategory(BaseModel):
+    product_id: int
+    category_id: int

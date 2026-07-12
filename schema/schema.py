@@ -1,17 +1,26 @@
 from sqlalchemy.orm import DeclarativeBase
-from sqlalchemy import Column, Integer, String, DateTime, Text, Float, ForeignKey
-from sqlalchemy.schema import PrimaryKeyConstraint
-
+from sqlalchemy import (
+    Column, 
+    Integer, 
+    String, 
+    DateTime, 
+    Text, Float, 
+    ForeignKey, 
+    Identity, 
+    PrimaryKeyConstraint, 
+    func
+)
+    
 class Base(DeclarativeBase):
     pass
 
 class Category(Base):
     __tablename__ = "category"
     
-    id = Column(Integer, primary_key=True, nullable=False)
+    id = Column(Integer, Identity(), primary_key=True, nullable=False)
     name = Column(String(255), unique=True, nullable=False)
     slug = Column(String(255), unique=True, nullable=False)
-    create_at = Column(DateTime)
+    create_at = Column(DateTime, server_default=func.now())
 
 class Product(Base):
     __tablename__ = "product"
@@ -27,10 +36,8 @@ class Product(Base):
 
 class ProductCategory(Base):
     __tablename__ = "product_category"
-
-    category_id = Column(Integer, ForeignKey("category.id", ondelete="CASCADE", onupdate="CASCADE"), nullable=False)
-    product_id = Column(Integer, ForeignKey("product.id", ondelete="CASCADE", onupdate="CASCADE"), nullable=False)
-    
+    product_id = Column(Integer, ForeignKey("product.id"), nullable=False)
+    category_id = Column(Integer, ForeignKey("category.id"), nullable=False)
     __table_args__ = (
-        PrimaryKeyConstraint("category_id", "product_id"),
+        PrimaryKeyConstraint("product_id", "category_id"),
     )
