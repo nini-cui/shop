@@ -1,11 +1,9 @@
 from datetime import datetime
 from pydantic import BaseModel
 
-class Category(BaseModel):
-    id: int
+class CategoryCreate(BaseModel):
     name: str
     slug: str
-    created_at: datetime
 
 class Product(BaseModel):
     id: int
