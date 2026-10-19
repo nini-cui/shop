@@ -16,3 +16,11 @@ class ProductCreate(BaseModel):
 class ProductCategory(BaseModel):
     product_id: int
     category_id: int
+
+class ProductList(BaseModel):
+    category_id: int | None = None
+    min_price: float | None = None
+    max_price: float | None = None
+
+class ProductGet(BaseModel):
+    product_id: int
