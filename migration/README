@@ -1,1 +1,12 @@
 Generic single-database configuration.
+
+Run the following command to generate a migration:
+
+```
+alembic revision --autogenerate -m <describe the change>
+```
+
+Verify the current schema:
+```
+alembic current
+```

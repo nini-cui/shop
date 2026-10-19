@@ -41,3 +41,10 @@ class ProductCategory(Base):
     __table_args__ = (
         PrimaryKeyConstraint("product_id", "category_id"),
     )
+
+class ProductImages(Base):
+    __tablename__ = "product_images"
+    id = Column(Integer, Identity(), primary_key=True, nullable=False)
+    product_id = Column(Integer, ForeignKey("product.id"), nullable=False)
+    image_key = description = Column(Text, nullable=False, unique=True)
+    display_order = Column(Integer, nullable=False, default=0)
