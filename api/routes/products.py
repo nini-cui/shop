@@ -5,8 +5,8 @@ from db import deps, models
 
 router = APIRouter(prefix="/products", tags=["Products"])
 
-@router.get("/")
-def get_products(
+@router.post("/")
+def add_products(
     payload: models.ProductCreate,
     db: Session = Depends(deps.get_db)):
 
