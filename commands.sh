@@ -6,3 +6,6 @@ curl -X POST http://localhost:8000/products/ -H "Content-Type: application/json"
 
 # list products by category
 curl -X GET http://localhost:8000/products/?category_id=3
+
+# create buckets
+curl -X POST http://localhost:8000/storage/bucket
