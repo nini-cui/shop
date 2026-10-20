@@ -1,5 +1,4 @@
-from datetime import datetime
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 class CategoryCreate(BaseModel):
     name: str
@@ -11,7 +10,8 @@ class ProductCreate(BaseModel):
     description: str | None = None
     price: float
     stock_quantity: int
-    category_ids: list[int] = []
+    category_ids: list[int] = Field(default_factory=list)
+    images: list[int] = Field(default_factory=list)
 
 class ProductCategory(BaseModel):
     product_id: int
