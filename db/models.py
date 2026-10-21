@@ -11,7 +11,7 @@ class ProductCreate(BaseModel):
     price: float
     stock_quantity: int
     category_ids: list[int] = Field(default_factory=list)
-    images: list[int] = Field(default_factory=list)
+    images: list[str] = Field(default_factory=list)
 
 class ProductCategory(BaseModel):
     product_id: int
