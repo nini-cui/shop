@@ -4,11 +4,12 @@ from sqlalchemy import (
     Integer, 
     String, 
     DateTime, 
-    Text, Float, 
+    Text, 
     ForeignKey, 
     Identity, 
     PrimaryKeyConstraint, 
-    func
+    func,
+    Numeric
 )
     
 class Base(DeclarativeBase):
@@ -29,15 +30,15 @@ class Product(Base):
     name = Column(String(255), unique=True, nullable=False)
     slug = Column(String(255), unique=True, nullable=False)
     description = Column(Text)
-    price = Column(Float, nullable=False)
+    price = Column(Numeric(10, 2), nullable=False)
     stock_quantity = Column(Integer, nullable=False)
     created_at = Column(DateTime, server_default=func.now())
-    updated_at = Column(DateTime, server_default=func.now())
+    updated_at = Column(DateTime, server_default=func.now(), onupdate=func.now())
 
 class ProductCategory(Base):
     __tablename__ = "product_category"
-    product_id = Column(Integer, ForeignKey("product.id"), nullable=False)
-    category_id = Column(Integer, ForeignKey("category.id"), nullable=False)
+    product_id = Column(Integer, ForeignKey("product.id", ondelete="CASCADE"), nullable=False)
+    category_id = Column(Integer, ForeignKey("category.id", ondelete="CASCADE"), nullable=False)
     __table_args__ = (
         PrimaryKeyConstraint("product_id", "category_id"),
     )
@@ -45,6 +46,6 @@ class ProductCategory(Base):
 class ProductImages(Base):
     __tablename__ = "product_images"
     id = Column(Integer, Identity(), primary_key=True, nullable=False)
-    product_id = Column(Integer, ForeignKey("product.id"), nullable=False)
-    image_key = description = Column(Text, nullable=False, unique=True)
+    product_id = Column(Integer, ForeignKey("product.id", ondelete="CASCADE"), nullable=False)
+    image_key = Column(Text, nullable=False, unique=True)
     display_order = Column(Integer, nullable=False, default=0)
