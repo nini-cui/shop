@@ -60,7 +60,7 @@ def upload_images(
             detail="Only JPEG, PNG, and WebP images are allowed.",
         )
 
-    image_key = f"product-uploads/{uuid.uuid4()}{allowed_types[file.content_type]}"
+    image_key = f"{uuid.uuid4()}{allowed_types[file.content_type]}"
 
     try:
         s3.upload_fileobj(
