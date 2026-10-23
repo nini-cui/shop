@@ -25,3 +25,6 @@ class ProductList(BaseModel):
 
 class ProductGet(BaseModel):
     product_id: int = Field(gt=0)
+
+class BucketCreate(BaseModel):
+    bucket_name: str | None = Field(default=None, min_length=3, max_length=63)

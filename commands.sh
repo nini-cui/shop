@@ -9,3 +9,6 @@ curl -X GET http://localhost:8000/products/?category_id=3
 
 # create buckets
 curl -X POST http://localhost:8000/storage/bucket
+
+# upload images
+curl -X POST http://localhost:8000/storage/images -F "file=@images/bunny.png" -F "bucket_name=keyring-product-images"
