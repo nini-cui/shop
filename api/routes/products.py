@@ -7,10 +7,9 @@ from typing import Annotated
 
 router = APIRouter(prefix="/products", tags=["Products"])
 
+
 @router.post("/")
-def add_products(
-    payload: models.ProductCreate,
-    db: Session = Depends(deps.get_db)):
+def add_products(payload: models.ProductCreate, db: Session = Depends(deps.get_db)):
 
     # step 1: check if all passed category ids are created
     categories = (
@@ -31,11 +30,11 @@ def add_products(
     try:
         # step 2: insert into product table
         product = schema.Product(
-            name=payload.name, 
-            slug=payload.slug, 
-            description=payload.description, 
-            price=payload.price, 
-            stock_quantity=payload.stock_quantity
+            name=payload.name,
+            slug=payload.slug,
+            description=payload.description,
+            price=payload.price,
+            stock_quantity=payload.stock_quantity,
         )
         db.add(product)
         db.flush()
@@ -52,9 +51,7 @@ def add_products(
         image_keys = dict.fromkeys(payload.images)
         for idx, image_key in enumerate(image_keys):
             product_image = schema.ProductImages(
-                product_id = product.id,
-                image_key = image_key,
-                display_order = idx
+                product_id=product.id, image_key=image_key, display_order=idx
             )
             db.add(product_image)
 
@@ -67,50 +64,36 @@ def add_products(
         db.rollback()
         raise
 
+
 @router.get("/")
 def list_products(
-    filters: Annotated[models.ProductList, Query()],
-    db: Session = Depends(deps.get_db)
+    filters: Annotated[models.ProductList, Query()], db: Session = Depends(deps.get_db)
 ):
     query = select(schema.Product)
 
     if filters.min_price is not None:
-        query = query.where(
-            schema.Product.price >= filters.min_price
-        )
+        query = query.where(schema.Product.price >= filters.min_price)
 
     if filters.max_price is not None:
-        query = query.where(
-            schema.Product.price <= filters.max_price
-        )
+        query = query.where(schema.Product.price <= filters.max_price)
 
     if filters.category_id is not None:
-        query = (
-            query
-            .join(
-                schema.ProductCategory,
-                schema.Product.id == schema.ProductCategory.product_id
-            )
-            .where(
-                schema.ProductCategory.category_id == filters.category_id
-            )
-        )
+        query = query.join(
+            schema.ProductCategory,
+            schema.Product.id == schema.ProductCategory.product_id,
+        ).where(schema.ProductCategory.category_id == filters.category_id)
 
     products = db.execute(query).scalars().all()
 
     return products
-    
+
 
 @router.get("/{product_id}")
-def get_product(
-    product_id: int,
-    db: Session = Depends(deps.get_db)
-):
-    product = db.execute(select(schema.Product).where(schema.Product.id == product_id)).scalar()
+def get_product(product_id: int, db: Session = Depends(deps.get_db)):
+    product = db.execute(
+        select(schema.Product).where(schema.Product.id == product_id)
+    ).scalar()
     if product is None:
-        raise HTTPException(
-            status_code=404,
-            detail=print("product not found")
-        )
+        raise HTTPException(status_code=404, detail=print("product not found"))
 
     return product

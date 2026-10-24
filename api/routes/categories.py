@@ -6,11 +6,9 @@ from sqlalchemy import select
 
 router = APIRouter(prefix="/categories", tags=["Categories"])
 
+
 @router.post("/")
-def add_category(
-    payload: models.CategoryCreate,
-    db: Session = Depends(deps.get_db)
-):
+def add_category(payload: models.CategoryCreate, db: Session = Depends(deps.get_db)):
     category = schema.Category(name=payload.name, slug=payload.slug)
     db.add(category)
     db.commit()
@@ -18,11 +16,13 @@ def add_category(
 
     return category
 
+
 def fetch_categories(db: Session):
     categories = db.execute(select(schema.Category)).scalars().all()
     print("Categories", categories)
     return categories
 
+
 @router.get("/")
 def get_categories(db: Session = Depends(deps.get_db)):
-    return fetch_categories(db)   
+    return fetch_categories(db)

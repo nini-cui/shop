@@ -1,11 +1,4 @@
-from fastapi import (
-    APIRouter, 
-    HTTPException, 
-    UploadFile, 
-    File, 
-    Form,
-    HTTPException
-)
+from fastapi import APIRouter, HTTPException, UploadFile, File, Form, HTTPException
 import boto3, os, uuid
 from botocore.exceptions import ClientError
 from db import models
@@ -17,6 +10,7 @@ BUCKET_NAME = os.environ["BUCKET_NAME"]
 
 s3 = boto3.client("s3", region_name=AWS_REGION)
 
+
 @router.post("/buckets")
 def create_buckets(payload: models.BucketCreate):
     bucket_name = payload.bucket_name or BUCKET_NAME
@@ -24,9 +18,7 @@ def create_buckets(payload: models.BucketCreate):
     try:
         s3.create_bucket(
             Bucket=bucket_name,
-            CreateBucketConfiguration={
-                "LocationConstraint": AWS_REGION
-            },
+            CreateBucketConfiguration={"LocationConstraint": AWS_REGION},
         )
 
         return {
@@ -34,7 +26,7 @@ def create_buckets(payload: models.BucketCreate):
             "bucket": bucket_name,
             "region": AWS_REGION,
         }
-    
+
     except ClientError as e:
         error_code = e.response["Error"]["Code"]
 
@@ -43,11 +35,12 @@ def create_buckets(payload: models.BucketCreate):
             detail=f"bucket creation error: {error_code}",
         )
 
+
 @router.post("/images")
 def upload_images(
     file: UploadFile = File(...),
     bucket_name: str = Form(...),
-    ):
+):
     allowed_types = {
         "image/jpeg": ".jpg",
         "image/png": ".png",

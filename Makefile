@@ -15,3 +15,6 @@ up:
 
 down:
 	alembic downgrade -1
+
+format:
+	ruff format .
