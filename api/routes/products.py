@@ -28,23 +28,44 @@ def add_products(
             detail=f"Categories not found: {sorted(missing_ids)}",
         )
 
-    # step 2: insert into product table
-    product = schema.Product(name=payload.name, slug=payload.slug, description=payload.description, price=payload.price, stock_quantity=payload.stock_quantity)
-    db.add(product)
-    db.flush()
-    print("product id is: ", product.id)
-
-    for category_id in set(payload.category_ids):
-        product_category = schema.ProductCategory(
-            product_id=product.id,
-            category_id=category_id,
+    try:
+        # step 2: insert into product table
+        product = schema.Product(
+            name=payload.name, 
+            slug=payload.slug, 
+            description=payload.description, 
+            price=payload.price, 
+            stock_quantity=payload.stock_quantity
         )
-        db.add(product_category)
+        db.add(product)
+        db.flush()
+        print("product id is: ", product.id)
 
-    db.commit()
-    db.refresh(product)
+        for category_id in set(payload.category_ids):
+            product_category = schema.ProductCategory(
+                product_id=product.id,
+                category_id=category_id,
+            )
+            db.add(product_category)
 
-    return product
+        # step 3: insert into product image table
+        image_keys = dict.fromkeys(payload.images)
+        for idx, image_key in enumerate(image_keys):
+            product_image = schema.ProductImages(
+                product_id = product.id,
+                image_key = image_key,
+                display_order = idx
+            )
+            db.add(product_image)
+
+        db.commit()
+        db.refresh(product)
+
+        return product
+
+    except Exception:
+        db.rollback()
+        raise
 
 @router.get("/")
 def list_products(
