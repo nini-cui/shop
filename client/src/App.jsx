@@ -1,15 +1,11 @@
 import { useState } from 'react'
-import ImageUpload from "./ImageUpload";
-import CategoryDropdown from "./CategoryDropdown";
+import ProductForm from "./ProductForm"
 
 function App() {
   return (
-    <>
       <div>
-        <CategoryDropdown/>
-        {/* <ImageUpload/> */}
+        <ProductForm/>
       </div>
-    </>
   )
 }
 

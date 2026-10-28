@@ -33,7 +33,7 @@ function CategoryDropdown() {
 
                 {
                     categories.map((category) => (
-                        <option key={category.id}>
+                        <option key={category.id} value={category.id}>
                             {category.name}
                         </option>
                     ))
