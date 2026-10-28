@@ -24,5 +24,5 @@ def fetch_categories(db: Session):
 
 
 @router.get("/")
-def get_categories(db: Session = Depends(deps.get_db)):
+def list_categories(db: Session = Depends(deps.get_db)):
     return fetch_categories(db)

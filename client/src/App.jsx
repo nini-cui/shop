@@ -1,11 +1,13 @@
 import { useState } from 'react'
 import ImageUpload from "./ImageUpload";
+import CategoryDropdown from "./CategoryDropdown";
 
 function App() {
   return (
     <>
       <div>
-        <ImageUpload/>
+        <CategoryDropdown/>
+        {/* <ImageUpload/> */}
       </div>
     </>
   )

@@ -1,8 +1,10 @@
-import React, {useState} from "react";
+import {useState} from "react";
 
 function ImageUpload() {
     const [file, setFile] = useState(null);
     const [message, setMessage] = useState("");
+    const [imageKeys, setImageKeys] = useState([]);
+
     const imageUploadEndpoint = "http://localhost:8000/storage/images"
     const uploadMethod = "POST"
     const uploadBucketName = import.meta.env.VITE_UPLOAD_BUCKET_NAME
@@ -17,6 +19,7 @@ function ImageUpload() {
         formData.append("file", file);
         formData.append("bucket_name", uploadBucketName);
 
+        // upload images to S3
         try {
             const resp = await fetch(
                 imageUploadEndpoint,
@@ -32,6 +35,7 @@ function ImageUpload() {
 
             const data = await resp.json();
             setMessage(`Upload successful! Image key: ${data.image_key}`);
+            setImageKeys((prevKeys) => [...prevKeys, data.image_key]);
         } catch (error) {
             setMessage(`Error: ${error.message}`);
         }
