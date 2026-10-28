@@ -5,7 +5,7 @@ function ImageUpload() {
     const [message, setMessage] = useState("");
     const imageUploadEndpoint = "http://localhost:8000/storage/images"
     const uploadMethod = "POST"
-    const uploadBucketName = "keyring-product-images"
+    const uploadBucketName = import.meta.env.VITE_UPLOAD_BUCKET_NAME
 
     async function handleImageUpload() {
         if (!file) {

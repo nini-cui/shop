@@ -37,7 +37,7 @@ def create_buckets(payload: models.BucketCreate):
 
 
 @router.post("/images")
-def upload_images(
+async def upload_images(
     file: UploadFile = File(...),
     bucket_name: str = Form(...),
 ):
@@ -71,4 +71,4 @@ def upload_images(
         )
 
     finally:
-        file.close()
+        await file.close()
