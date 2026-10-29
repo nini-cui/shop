@@ -7,9 +7,47 @@ function ProductForm() {
     const [productDescription, setProductDescription] = useState("");
     const [productPrice, setProductPrice] = useState("");
     const [productStockQuantity, setProductStockQuantity] = useState("");
+    const [selectedCategories, setSelectedCategories] = useState([]);
+    const [imageKeys, setImageKeys] = useState([]);
+
+    const createProductEndpoint = "http://localhost:8000/products/"
+
+    async function handleSubmit(event) {
+        event.preventDefault();
+
+        const productData = {
+            name: productName,
+            description: productDescription,
+            price: Number(productPrice),
+            stock_quantity: Number(productStockQuantity),
+            category_ids: selectedCategories,
+            image_keys: imageKeys
+        }
+
+        try {
+            const resp = await fetch(createProductEndpoint, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(productData)
+            });
+
+            const data = await resp.json();
+
+            if (!resp.ok) {
+                console.error("API error:", data);
+                throw new Error(JSON.stringify(data.detail));
+            }
+
+            console.log("Product created successfully:", data);
+        } catch (error) {
+            console.error("Error creating product:", error);
+        }
+    }
 
     return (
-        <form>
+        <form onSubmit={handleSubmit}>
             <div>
                 <label>Product Name</label>
                 <input 
@@ -41,12 +79,19 @@ function ProductForm() {
                 <input
                     type="number"
                     value={productStockQuantity}
-                    onChange={(event) => setStockQuantity(event.target.value)}
+                    onChange={(event) => setProductStockQuantity(event.target.value)}
                 />
             </div>
 
-            <CategoryDropdown/>
-            <ImageUpload/>
+            <CategoryDropdown
+                selectedCategories={selectedCategories}
+                setSelectedCategories={setSelectedCategories}
+            />
+            
+            <ImageUpload
+                imageKeys={imageKeys}
+                setImageKeys={setImageKeys}
+            />
 
             <button type="submit">Create Product</button>
         </form>

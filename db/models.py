@@ -9,12 +9,11 @@ class CategoryCreate(BaseModel):
 
 class ProductCreate(BaseModel):
     name: str = Field(min_length=1, max_length=255)
-    slug: str = Field(min_length=1, max_length=255)
     description: str | None = None
     price: Decimal = Field(gt=0)
     stock_quantity: int = Field(ge=0)
     category_ids: list[int] = Field(default_factory=list)
-    images: list[str] = Field(default_factory=list)
+    image_keys: list[str] = Field(default_factory=list)
 
 
 class ProductCategory(BaseModel):

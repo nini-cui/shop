@@ -1,9 +1,8 @@
 import { useState, useEffect } from "react";
 
-function CategoryDropdown() {
+function CategoryDropdown({ selectedCategories, setSelectedCategories }) {
     const listCategoryEndpoint = "http://localhost:8000/categories/"
     const [categories, setCategories] = useState([]);
-    const [selectedCategory, setSelectedCategory] = useState("");
 
     async function listCategories() {
         const resp = await fetch(listCategoryEndpoint);
@@ -12,8 +11,8 @@ function CategoryDropdown() {
             throw new Error("Failed to fetch categories");
         }
 
-        const categories = await resp.json();
-        setCategories(categories)
+        const data = await resp.json();
+        setCategories(data)
     }
 
     useEffect(() => {
@@ -23,24 +22,31 @@ function CategoryDropdown() {
     
     return (
         <div>
-            <select
-                value={selectedCategory}
-                onChange={(event) => 
-                    setSelectedCategory(event.target.value)
-                }
-            >
-                <option value="">Select a category</option>
+            <p>Categories</p>
 
-                {
-                    categories.map((category) => (
-                        <option key={category.id} value={category.id}>
-                            {category.name}
-                        </option>
-                    ))
-                }
-
-            </select>
-            
+            {categories.map((category) => (
+                <label key={category.id}>
+                    <input
+                        type="checkbox"
+                        checked={selectedCategories.includes(category.id)}
+                        onChange={(event) => {
+                            if (event.target.checked) {
+                                setSelectedCategories([
+                                    ...selectedCategories,
+                                    category.id,
+                                ]);
+                            } else {
+                                setSelectedCategories(
+                                    selectedCategories.filter(
+                                        (id) => id !== category.id
+                                    )
+                                );
+                            }
+                        }}
+                    />
+                    {category.name}
+                </label>
+            ))}
         </div>
     )
 }

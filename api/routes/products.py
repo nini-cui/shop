@@ -3,13 +3,14 @@ from sqlalchemy.orm import Session
 from schema import schema
 from db import deps, models
 from sqlalchemy import select
+from slugify import slugify
 from typing import Annotated
 
 router = APIRouter(prefix="/products", tags=["Products"])
 
 
 @router.post("/")
-def add_products(payload: models.ProductCreate, db: Session = Depends(deps.get_db)):
+def add_product(payload: models.ProductCreate, db: Session = Depends(deps.get_db)):
 
     # step 1: check if all passed category ids are created
     categories = (
@@ -27,11 +28,13 @@ def add_products(payload: models.ProductCreate, db: Session = Depends(deps.get_d
             detail=f"Categories not found: {sorted(missing_ids)}",
         )
 
+    slug = slugify(payload.name)
+
     try:
         # step 2: insert into product table
         product = schema.Product(
             name=payload.name,
-            slug=payload.slug,
+            slug=slug,
             description=payload.description,
             price=payload.price,
             stock_quantity=payload.stock_quantity,
@@ -48,7 +51,7 @@ def add_products(payload: models.ProductCreate, db: Session = Depends(deps.get_d
             db.add(product_category)
 
         # step 3: insert into product image table
-        image_keys = dict.fromkeys(payload.images)
+        image_keys = dict.fromkeys(payload.image_keys)
         for idx, image_key in enumerate(image_keys):
             product_image = schema.ProductImages(
                 product_id=product.id, image_key=image_key, display_order=idx

@@ -1,9 +1,8 @@
 import {useState} from "react";
 
-function ImageUpload() {
+function ImageUpload({ imageKeys, setImageKeys}) {
     const [file, setFile] = useState(null);
     const [message, setMessage] = useState("");
-    const [imageKeys, setImageKeys] = useState([]);
 
     const imageUploadEndpoint = "http://localhost:8000/storage/images"
     const uploadMethod = "POST"
@@ -49,7 +48,11 @@ function ImageUpload() {
                 onChange={(event) => setFile(event.target.files[0] || null)}
             />
 
-            <button onClick={handleImageUpload} disabled={!file}>
+            <button 
+                type="button"
+                onClick={handleImageUpload} 
+                disabled={!file}
+            >
                 Upload Image
             </button>
         </div>
