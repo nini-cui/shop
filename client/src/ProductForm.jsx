@@ -1,6 +1,7 @@
 import { useState } from "react";
 import ImageUpload from "./ImageUpload";
 import CategoryDropdown from "./CategoryDropdown";
+import "./ProductForm.css"
 
 function ProductForm() {
     const [productName, setProductName] = useState("");
@@ -47,54 +48,61 @@ function ProductForm() {
     }
 
     return (
-        <form onSubmit={handleSubmit}>
-            <div>
-                <label>Product Name</label>
-                <input 
-                    value={productName}
-                    onChange={(event) => setProductName(event.target.value)}
+        <div className="product-form-container">
+            <h2>Create Product</h2>
+            <form onSubmit={handleSubmit}>
+                <div className="form-group">
+                    <label htmlFor="productName">Product Name</label>
+                    <input 
+                        id="productName"
+                        type="text"
+                        className="form-input"
+                        placeholder="Enter Product Name"
+                        value={productName}
+                        onChange={(event) => setProductName(event.target.value)}
+                    />
+                </div>
+
+                <div>
+                    <label>Product Description</label>
+                    <textarea 
+                        value={productDescription}
+                        onChange={(event) => setProductDescription(event.target.value)}
+                    />
+                </div>
+
+                <div>
+                    <label>Product Price</label>
+                    <input
+                        type="number"
+                        step="0.01"
+                        value={productPrice}
+                        onChange={(event) => setProductPrice(event.target.value)}
+                    />
+                </div>
+
+                <div>
+                    <label>Stock Quantity</label>
+                    <input
+                        type="number"
+                        value={productStockQuantity}
+                        onChange={(event) => setProductStockQuantity(event.target.value)}
+                    />
+                </div>
+
+                <CategoryDropdown
+                    selectedCategories={selectedCategories}
+                    setSelectedCategories={setSelectedCategories}
                 />
-            </div>
-
-            <div>
-                <label>Product Description</label>
-                <textarea 
-                    value={productDescription}
-                    onChange={(event) => setProductDescription(event.target.value)}
+                
+                <ImageUpload
+                    imageKeys={imageKeys}
+                    setImageKeys={setImageKeys}
                 />
-            </div>
 
-            <div>
-                <label>Product Price</label>
-                <input
-                    type="number"
-                    step="0.01"
-                    value={productPrice}
-                    onChange={(event) => setProductPrice(event.target.value)}
-                />
-            </div>
-
-            <div>
-                <label>Stock Quantity</label>
-                <input
-                    type="number"
-                    value={productStockQuantity}
-                    onChange={(event) => setProductStockQuantity(event.target.value)}
-                />
-            </div>
-
-            <CategoryDropdown
-                selectedCategories={selectedCategories}
-                setSelectedCategories={setSelectedCategories}
-            />
-            
-            <ImageUpload
-                imageKeys={imageKeys}
-                setImageKeys={setImageKeys}
-            />
-
-            <button type="submit">Create Product</button>
-        </form>
+                <button type="submit">Create Product</button>
+            </form>
+         </div>
     );
 }
 
