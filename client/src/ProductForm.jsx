@@ -56,16 +56,19 @@ function ProductForm() {
                     <input 
                         id="productName"
                         type="text"
-                        className="form-input"
+                        className="form-input product-name-input"
                         placeholder="Enter Product Name"
                         value={productName}
                         onChange={(event) => setProductName(event.target.value)}
                     />
                 </div>
 
-                <div>
-                    <label>Product Description</label>
+                <div className="form-group">
+                    <label htmlFor="productDescription">Product Description</label>
                     <textarea 
+                        id="productDescription"
+                        className="form-input form-textarea"
+                        placeholder="Enter Product Description"
                         value={productDescription}
                         onChange={(event) => setProductDescription(event.target.value)}
                     />
