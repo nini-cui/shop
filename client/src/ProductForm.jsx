@@ -74,23 +74,39 @@ function ProductForm() {
                     />
                 </div>
 
-                <div>
-                    <label>Product Price</label>
-                    <input
-                        type="number"
-                        step="0.01"
-                        value={productPrice}
-                        onChange={(event) => setProductPrice(event.target.value)}
-                    />
+                <div className="form-group">
+                    <label htmlFor="productPrice">Product Price</label>
+
+                    <div>
+                        <span className="currency-symbol">$</span>
+                        <input
+                            id="productPrice"
+                            type="number"
+                            step="1.0"
+                            min="0"
+                            className="form-input number-input price-input"
+                            placeholder="0.00"
+                            value={productPrice}
+                            onChange={(event) => setProductPrice(event.target.value)}
+                        />
+                    </div>
                 </div>
 
-                <div>
-                    <label>Stock Quantity</label>
-                    <input
-                        type="number"
-                        value={productStockQuantity}
-                        onChange={(event) => setProductStockQuantity(event.target.value)}
-                    />
+                <div className="form-group">
+                    <label htmlFor="productStockQuantity">Stock Quantity</label>
+
+                     <div>
+                        <input
+                            id="productStockQuantity"
+                            type="number"
+                            min="0"
+                            step="1"
+                            className="form-input number-input stock-quantity-input"
+                            placeholder="1"
+                            value={productStockQuantity}
+                            onChange={(event) => setProductStockQuantity(event.target.value)}
+                        />
+                    </div>
                 </div>
 
                 <CategoryDropdown

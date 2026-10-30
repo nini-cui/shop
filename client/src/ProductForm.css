@@ -52,3 +52,33 @@
     text-align: center;
 }
 
+.number-input-container {
+    position: relative;
+    width: 200px;
+    height: 40px;
+}
+
+.number-input {
+    width: 200px;
+    height: 40px;
+    box-sizing: border-box;
+}
+
+.price-input {
+    padding-left: 30px;
+}
+
+.currency-symbol {
+    position: relative;
+    left: -2px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #6b7280;
+    z-index: 2;
+    pointer-events: none;
+}
+
+.stock-quantity-input {
+    margin-left: 15px;
+}
+
