@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 function CategoryDropdown({ selectedCategories, setSelectedCategories }) {
     const listCategoryEndpoint = "http://localhost:8000/categories/"
     const [categories, setCategories] = useState([]);
+    const [isOpen, setIsOpen] = useState(false);
 
     async function listCategories() {
         const resp = await fetch(listCategoryEndpoint);
@@ -19,36 +20,59 @@ function CategoryDropdown({ selectedCategories, setSelectedCategories }) {
         listCategories().catch(console.error);
     }, [])
 
-    
-    return (
-        <div>
-            <p>Categories</p>
+    const selectedCategoryNames = categories
+        .filter(category => selectedCategories.includes(category.id))
+        .map(category => category.name);
 
-            {categories.map((category) => (
-                <label key={category.id}>
-                    <input
-                        type="checkbox"
-                        checked={selectedCategories.includes(category.id)}
-                        onChange={(event) => {
-                            if (event.target.checked) {
-                                setSelectedCategories([
-                                    ...selectedCategories,
-                                    category.id,
-                                ]);
-                            } else {
-                                setSelectedCategories(
-                                    selectedCategories.filter(
-                                        (id) => id !== category.id
-                                    )
-                                );
-                            }
-                        }}
-                    />
-                    {category.name}
-                </label>
-            ))}
+    return (
+        <div className="form-group">
+            <label>Categories</label>
+
+            <button
+                type="button"
+                className="category-dropdown-button"
+                onClick={() => setIsOpen(!isOpen)}
+            >
+                <span>
+                    {selectedCategoryNames.length > 0
+                            ? selectedCategoryNames.join(", ")
+                            : "Select categories"}
+                </span>
+            </button>
+            
+            {
+                isOpen && (
+                    <div>
+                        {
+                            categories.map(category => (
+                                <label key={category.id}>
+                                    <input
+                                        type="checkbox"
+                                        checked={selectedCategories.includes(category.id)}
+                                        onChange={(event) => {
+                                            if (event.target.checked) {
+                                                setSelectedCategories([
+                                                    ...selectedCategories,
+                                                    category.id
+                                                ]);
+                                            } else {
+                                                setSelectedCategories(
+                                                    selectedCategories.filter(
+                                                        id => id !== category.id
+                                                    )
+                                                );
+                                            }
+                                        }}
+                                    />
+                                    {category.name}
+                                </label>
+                            ))
+                        }
+                    </div>
+                )
+            }
         </div>
-    )
+    );
 }
 
 export default CategoryDropdown;
