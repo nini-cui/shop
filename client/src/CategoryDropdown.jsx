@@ -26,12 +26,12 @@ function CategoryDropdown({ selectedCategories, setSelectedCategories }) {
 
   return (
     <div className="form-group">
-      <lable>Categories</lable>
+      <lable className="product-lable">Categories</lable>
 
       <button
         type="button"
         className="category-dropdown-button"
-        onClick={(event) => setIsOpen(!isOpen)}
+        onClick={() => setIsOpen(!isOpen)}
       >
         <span>
           {selectedCategoryNames.length > 0

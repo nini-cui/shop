@@ -38,16 +38,30 @@ function ImageUpload({ imageKeys, setImageKeys }) {
   }
 
   return (
-    <div>
-      <input
-        type="file"
-        accept="image/jpeg,image/png,image/webp"
-        onChange={(event) => setFile(event.target.files[0] || null)}
-      />
+    <div className="image-upload-container">
+      <label className="product-label">Product Images</label>
 
-      <button type="button" onClick={handleImageUpload} disabled={!file}>
-        Upload Image
-      </button>
+      <div className="image-upload-area">
+        <label className="upload-action-button choose-file-button">
+            Choose File
+          <input
+            type="file"
+            accept="image/jpeg,image/png,image/webp"
+            onChange={(event) => setFile(event.target.files[0] || null)}
+          />
+        </label>
+
+        {file && <p className="selected-file">{file.name}</p>}
+
+        <button
+          type="button"
+          className="upload-action-button image-upload-button"
+          onClick={handleImageUpload}
+          disabled={!file}
+        >
+          Upload Image
+        </button>
+      </div>
     </div>
   );
 }
