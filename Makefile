@@ -18,3 +18,4 @@ down:
 
 format:
 	ruff format .
+	cd client && npx prettier --write "**/*.{js,jsx,css,json}"

@@ -1,12 +1,12 @@
-import { useState } from 'react'
-import ProductForm from "./ProductForm"
+import { useState } from "react";
+import ProductForm from "./ProductForm";
 
 function App() {
   return (
-      <div>
-        <ProductForm/>
-      </div>
-  )
+    <div>
+      <ProductForm />
+    </div>
+  );
 }
 
 export default App;
