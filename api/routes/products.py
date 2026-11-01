@@ -86,6 +86,10 @@ def list_products(
             schema.Product.id == schema.ProductCategory.product_id,
         ).where(schema.ProductCategory.category_id == filters.category_id)
 
+    offset = (filters.page - 1) * filters.page_size
+
+    query = query.offset(offset).limit(filters.page_size)
+
     products = db.execute(query).scalars().all()
 
     return products

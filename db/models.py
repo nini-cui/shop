@@ -25,6 +25,8 @@ class ProductList(BaseModel):
     category_id: int | None = Field(default=None, gt=0)
     min_price: Decimal | None = Field(default=None, ge=0)
     max_price: Decimal | None = Field(default=None, ge=0)
+    page: int = Field(default=1, ge=1)
+    page_size: int = Field(default=50, ge=1, le=100)
 
 
 class ProductGet(BaseModel):

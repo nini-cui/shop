@@ -14,8 +14,8 @@ curl -X POST "http://localhost:8000/products/" \
     "images": ["1", "2", "3"]
 }'
 
-# list products by category
-curl -X GET http://localhost:8000/products/?category_id=3
+# list products by category and min price
+curl -X GET "http://localhost:8000/products/?category_id=3&min_price=10"
 
 # create buckets
 curl -X POST http://localhost:8000/storage/bucket
