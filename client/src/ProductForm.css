@@ -156,3 +156,21 @@
 .image-upload-button:hover {
   background-color: #60a5fa;
 }
+
+.create-product-btn {
+  width: 100%;
+  padding: 12px 20px;
+  background-color: #3770ec;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.create-product-btn:hover {
+  background-color: #1d4ed8;
+}
+

@@ -116,7 +116,9 @@ function ProductForm() {
 
         <ImageUpload imageKeys={imageKeys} setImageKeys={setImageKeys} />
 
-        <button type="submit">Create Product</button>
+        <button type="submit" className="create-product-btn">
+          Create Product
+        </button>
       </form>
     </div>
   );

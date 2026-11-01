@@ -38,12 +38,12 @@ function ImageUpload({ imageKeys, setImageKeys }) {
   }
 
   return (
-    <div className="image-upload-container">
+    <div>
       <label className="product-label">Product Images</label>
 
       <div className="image-upload-area">
         <label className="upload-action-button choose-file-button">
-            Choose File
+          Choose File
           <input
             type="file"
             accept="image/jpeg,image/png,image/webp"
