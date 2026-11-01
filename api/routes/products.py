@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException, Query
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, selectinload
 from schema import schema
 from db import deps, models
 from sqlalchemy import select
@@ -68,11 +68,11 @@ def add_product(payload: models.ProductCreate, db: Session = Depends(deps.get_db
         raise
 
 
-@router.get("/")
+@router.get("/", response_model=models.ProductListResponse)
 def list_products(
     filters: Annotated[models.ProductList, Query()], db: Session = Depends(deps.get_db)
 ):
-    query = select(schema.Product)
+    query = select(schema.Product).options(selectinload(schema.Product.images))
 
     if filters.min_price is not None:
         query = query.where(schema.Product.price >= filters.min_price)
@@ -86,13 +86,21 @@ def list_products(
             schema.Product.id == schema.ProductCategory.product_id,
         ).where(schema.ProductCategory.category_id == filters.category_id)
 
-    offset = (filters.page - 1) * filters.page_size
+    page_size = filters.page_size
+    offset = (filters.page - 1) * page_size
 
-    query = query.offset(offset).limit(filters.page_size)
+    query = query.offset(offset).limit(page_size + 1)
 
     products = db.execute(query).scalars().all()
 
-    return products
+    has_next = len(products) > page_size
+    products = products[:page_size]
+
+    return models.ProductListResponse(
+        items=products,
+        next=has_next,
+        previous=filters.page > 1,
+    )
 
 
 @router.get("/{product_id}")

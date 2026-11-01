@@ -1,5 +1,9 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, ConfigDict
 from decimal import Decimal
+
+
+class BaseResponse(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
 
 
 class CategoryCreate(BaseModel):
@@ -35,3 +39,24 @@ class ProductGet(BaseModel):
 
 class BucketCreate(BaseModel):
     bucket_name: str | None = Field(default=None, min_length=3, max_length=63)
+
+
+class ProductImageResponse(BaseResponse):
+    image_key: str
+    display_order: int
+
+
+class ProductResponse(BaseResponse):
+    id: int
+    name: str
+    slug: str
+    description: str | None = None
+    price: Decimal
+    stock_quantity: int
+    images: list[ProductImageResponse] = Field(default_factory=list)
+
+
+class ProductListResponse(BaseModel):
+    products: list[ProductResponse]
+    next: bool
+    previous: bool

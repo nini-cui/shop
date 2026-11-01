@@ -1,4 +1,4 @@
-from sqlalchemy.orm import DeclarativeBase
+from sqlalchemy.orm import DeclarativeBase, relationship
 from sqlalchemy import (
     Column,
     Integer,
@@ -38,6 +38,8 @@ class Product(Base):
     created_at = Column(DateTime, server_default=func.now())
     updated_at = Column(DateTime, server_default=func.now(), onupdate=func.now())
 
+    images = relationship("ProductImages", back_populates="product")
+
 
 class ProductCategory(Base):
     __tablename__ = "product_category"
@@ -58,3 +60,5 @@ class ProductImages(Base):
     )
     image_key = Column(Text, nullable=False, unique=True)
     display_order = Column(Integer, nullable=False, default=0)
+
+    product = relationship("Product", back_populates="images")
