@@ -1,11 +1,9 @@
-import { BrowserRouter } from "react-router-dom";
-import Navbar from "./components/common/Navbar";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import ProductsPage from "./components/pages/ProductsPage";
 
 function App() {
   return (
-    <BrowserRouter>
-      <Navbar />
-    </BrowserRouter>
+    <ProductsPage />
   );
 }
 
