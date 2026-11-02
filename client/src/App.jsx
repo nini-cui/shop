@@ -1,11 +1,11 @@
-import { useState } from "react";
-import ProductForm from "./ProductForm";
+import { BrowserRouter } from "react-router-dom";
+import Navbar from "./components/common/Navbar";
 
 function App() {
   return (
-    <div>
-      <ProductForm />
-    </div>
+    <BrowserRouter>
+      <Navbar />
+    </BrowserRouter>
   );
 }
 
