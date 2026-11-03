@@ -44,6 +44,7 @@ class BucketCreate(BaseModel):
 class ProductImageResponse(BaseResponse):
     image_key: str
     display_order: int
+    image_url: str
 
 
 class ProductResponse(BaseResponse):

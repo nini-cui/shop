@@ -5,9 +5,22 @@ from db import deps, models
 from sqlalchemy import select
 from slugify import slugify
 from typing import Annotated
+import boto3, os
 
 router = APIRouter(prefix="/products", tags=["Products"])
+BUCKET_NAME = os.environ["BUCKET_NAME"]
 
+def generate_presigned_url(image_key: str):
+    s3_client = boto3.client("s3")
+
+    return s3_client.generate_presigned_url(
+        "get_object",
+        Params={
+            "Bucket": BUCKET_NAME,
+            "Key": image_key,
+        },
+        ExpiresIn=900,
+    )
 
 @router.post("/")
 def add_product(payload: models.ProductCreate, db: Session = Depends(deps.get_db)):
@@ -96,8 +109,13 @@ def list_products(
     has_next = len(products) > page_size
     products = products[:page_size]
 
+    for product in products:
+        for image in product.images:
+            image.image_url = generate_presigned_url(image.image_key)
+
+
     return models.ProductListResponse(
-        items=products,
+        products=products,
         next=has_next,
         previous=filters.page > 1,
     )
