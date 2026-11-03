@@ -26,7 +26,7 @@ function CategoryDropdown({ selectedCategories, setSelectedCategories }) {
 
   return (
     <div className="form-group">
-      <lable className="product-lable">Categories</lable>
+      <label>Categories</label>
 
       <button
         type="button"

@@ -173,3 +173,11 @@
 .create-product-btn:hover {
   background-color: #1d4ed8;
 }
+
+.product-label {
+  display: block;
+  font-size: 15px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 8px;
+}

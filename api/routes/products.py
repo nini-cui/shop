@@ -10,6 +10,7 @@ import boto3, os
 router = APIRouter(prefix="/products", tags=["Products"])
 BUCKET_NAME = os.environ["BUCKET_NAME"]
 
+
 def generate_presigned_url(image_key: str):
     s3_client = boto3.client("s3")
 
@@ -21,6 +22,7 @@ def generate_presigned_url(image_key: str):
         },
         ExpiresIn=900,
     )
+
 
 @router.post("/")
 def add_product(payload: models.ProductCreate, db: Session = Depends(deps.get_db)):
@@ -112,7 +114,6 @@ def list_products(
     for product in products:
         for image in product.images:
             image.image_url = generate_presigned_url(image.image_key)
-
 
     return models.ProductListResponse(
         products=products,

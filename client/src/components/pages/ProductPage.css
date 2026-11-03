@@ -1,0 +1,23 @@
+.create-product-container {
+  display: flex;
+  justify-content: flex-end;
+  margin: 25px;
+}
+
+.create-product-btn {
+  display: inline-flex !important;
+  width: auto !important;
+  flex: 0 0 auto;
+  padding: 11px 20px;
+  background-color: #2563eb;
+  color: white !important;
+  text-decoration: none !important;
+  font-size: 14px;
+  font-weight: 600;
+  border-radius: 7px;
+  transition: background-color 0.2s ease;
+}
+
+.create-product-btn:hover {
+  background-color: #1d4ed8;
+}
