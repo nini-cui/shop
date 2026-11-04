@@ -1,4 +1,4 @@
-from sqlalchemy.orm import DeclarativeBase, relationship
+from sqlalchemy.orm import relationship
 from sqlalchemy import (
     Column,
     Integer,
@@ -11,11 +11,7 @@ from sqlalchemy import (
     func,
     Numeric,
 )
-
-
-class Base(DeclarativeBase):
-    pass
-
+from schema.base import Base
 
 class Category(Base):
     __tablename__ = "category"
