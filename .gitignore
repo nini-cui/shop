@@ -3,3 +3,5 @@ images/
 client/node_modules/
 
 .venv/
+
+.env
