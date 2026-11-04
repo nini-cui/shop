@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session, selectinload
-from schema import schema
+from schema import product
 from db import deps, models
 from sqlalchemy import select
 from slugify import slugify
@@ -29,8 +29,8 @@ def add_product(payload: models.ProductCreate, db: Session = Depends(deps.get_db
 
     # step 1: check if all passed category ids are created
     categories = (
-        db.query(schema.Category)
-        .filter(schema.Category.id.in_(payload.category_ids))
+        db.query(product.Category)
+        .filter(product.Category.id.in_(payload.category_ids))
         .all()
     )
 
@@ -47,20 +47,20 @@ def add_product(payload: models.ProductCreate, db: Session = Depends(deps.get_db
 
     try:
         # step 2: insert into product table
-        product = schema.Product(
+        new_product = product.Product(
             name=payload.name,
             slug=slug,
             description=payload.description,
             price=payload.price,
             stock_quantity=payload.stock_quantity,
         )
-        db.add(product)
+        db.add(new_product)
         db.flush()
-        print("product id is: ", product.id)
+        print("product id is: ", new_product.id)
 
         for category_id in set(payload.category_ids):
-            product_category = schema.ProductCategory(
-                product_id=product.id,
+            product_category = product.ProductCategory(
+                product_id=new_product.id,
                 category_id=category_id,
             )
             db.add(product_category)
@@ -68,15 +68,15 @@ def add_product(payload: models.ProductCreate, db: Session = Depends(deps.get_db
         # step 3: insert into product image table
         image_keys = dict.fromkeys(payload.image_keys)
         for idx, image_key in enumerate(image_keys):
-            product_image = schema.ProductImages(
-                product_id=product.id, image_key=image_key, display_order=idx
+            product_image = product.ProductImages(
+                product_id=new_product.id, image_key=image_key, display_order=idx
             )
             db.add(product_image)
 
         db.commit()
-        db.refresh(product)
+        db.refresh(new_product)
 
-        return product
+        return new_product
 
     except Exception:
         db.rollback()
@@ -87,19 +87,19 @@ def add_product(payload: models.ProductCreate, db: Session = Depends(deps.get_db
 def list_products(
     filters: Annotated[models.ProductList, Query()], db: Session = Depends(deps.get_db)
 ):
-    query = select(schema.Product).options(selectinload(schema.Product.images))
+    query = select(product.Product).options(selectinload(product.Product.images))
 
     if filters.min_price is not None:
-        query = query.where(schema.Product.price >= filters.min_price)
+        query = query.where(product.Product.price >= filters.min_price)
 
     if filters.max_price is not None:
-        query = query.where(schema.Product.price <= filters.max_price)
+        query = query.where(product.Product.price <= filters.max_price)
 
     if filters.category_id is not None:
         query = query.join(
-            schema.ProductCategory,
-            schema.Product.id == schema.ProductCategory.product_id,
-        ).where(schema.ProductCategory.category_id == filters.category_id)
+            product.ProductCategory,
+            product.Product.id == product.ProductCategory.product_id,
+        ).where(product.ProductCategory.category_id == filters.category_id)
 
     page_size = filters.page_size
     offset = (filters.page - 1) * page_size
@@ -111,8 +111,8 @@ def list_products(
     has_next = len(products) > page_size
     products = products[:page_size]
 
-    for product in products:
-        for image in product.images:
+    for item in products:
+        for image in item.images:
             image.image_url = generate_presigned_url(image.image_key)
 
     return models.ProductListResponse(
@@ -125,7 +125,7 @@ def list_products(
 @router.get("/{product_id}")
 def get_product(product_id: int, db: Session = Depends(deps.get_db)):
     product = db.execute(
-        select(schema.Product).where(schema.Product.id == product_id)
+        select(product.Product).where(product.Product.id == product_id)
     ).scalar()
     if product is None:
         raise HTTPException(status_code=404, detail=print("product not found"))
