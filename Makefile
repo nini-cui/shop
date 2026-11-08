@@ -19,3 +19,9 @@ down:
 format:
 	ruff format .
 	cd client && npx prettier --write "**/*.{js,jsx,css,json}"
+
+rebuild-api-image:
+	docker compose up -d --force-recreate api
+
+rebuild-client-image:
+	docker compose up -d --force-recreate client

@@ -6,6 +6,7 @@ from sqlalchemy import select
 from slugify import slugify
 from typing import Annotated
 import boto3, os
+from api.auth import dependencies
 
 router = APIRouter(prefix="/products", tags=["Products"])
 BUCKET_NAME = os.environ["BUCKET_NAME"]
@@ -85,8 +86,12 @@ def add_product(payload: models.ProductCreate, db: Session = Depends(deps.get_db
 
 @router.get("/", response_model=models.ProductListResponse)
 def list_products(
-    filters: Annotated[models.ProductList, Query()], db: Session = Depends(deps.get_db)
+    filters: Annotated[models.ProductList, Query()],
+    current_user: dict = Depends(dependencies.get_current_user),
+    db: Session = Depends(deps.get_db),
 ):
+    # TO DO: validate user
+    print("current user, ", current_user)
     query = select(product.Product).options(selectinload(product.Product.images))
 
     if filters.min_price is not None:

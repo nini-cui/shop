@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import "./ProductList.css";
+import { useAuth } from "react-oidc-context";
 
 function ProductCard({ product }) {
   const [imageIndex, setImageIndex] = useState(0);
@@ -59,16 +60,30 @@ function ProductCard({ product }) {
 }
 
 function ProductList() {
+  const auth = useAuth();
+
   const [products, setProducts] = useState([]);
   const [page, setPage] = useState(1);
   const [hasNext, setHasNext] = useState(false);
   const pageSize = 8;
 
   useEffect(() => {
+    const token = auth.user?.access_token;
+    console.log("Access Token:", token);
+
+    if (!token) {
+        return;
+    }
+
     async function fetchProducts() {
       try {
         const resp = await fetch(
           `http://localhost:8000/products/?page=${page}&page_size=${pageSize}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          },
         );
 
         if (!resp.ok) {
@@ -85,7 +100,7 @@ function ProductList() {
     }
 
     fetchProducts();
-  }, [page]);
+  }, [page, auth.user?.access_token]);
 
   return (
     <div className="product-list-container">
