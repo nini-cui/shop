@@ -13,6 +13,7 @@ from sqlalchemy import (
 )
 from schema.base import Base
 
+
 class Category(Base):
     __tablename__ = "category"
 

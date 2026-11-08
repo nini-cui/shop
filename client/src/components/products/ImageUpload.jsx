@@ -26,14 +26,17 @@ function ImageUpload({ imageKeys, setImageKeys }) {
       });
 
       if (!resp.ok) {
-        throw new Error("Upload failed");
+        const errorData = await resp.json().catch(() => null);
+        throw new Error(errorData?.detail || "Image upload failed.");
       }
 
       const data = await resp.json();
       setMessage(`Upload successful! Image key: ${data.image_key}`);
       setImageKeys((prevKeys) => [...prevKeys, data.image_key]);
     } catch (error) {
+      console.error("Image upload error:", error);
       setMessage(`Error: ${error.message}`);
+      return;
     }
   }
 

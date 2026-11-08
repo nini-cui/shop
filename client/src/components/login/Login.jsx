@@ -15,9 +15,7 @@ function Login() {
   return (
     <div>
       <h1>G'day</h1>
-      <button onClick={() => auth.signinRedirect()}>
-        Login
-      </button>
+      <button onClick={() => auth.signinRedirect()}>Login</button>
     </div>
   );
 }

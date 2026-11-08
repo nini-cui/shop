@@ -22,6 +22,7 @@ class Role(Base):
 
     user_roles = relationship("UserRole", back_populates="role")
 
+
 class UserRole(Base):
     __tablename__ = "user_roles"
 
