@@ -19,6 +19,8 @@ services:
       timeout: 5s
     volumes:
       - authentik_database:/var/lib/postgresql/data
+    networks:
+      - default
 
   authentik-server:
     image: ${AUTHENTIK_IMAGE:-ghcr.io/goauthentik/server}:${AUTHENTIK_TAG:-2026.8.5}
@@ -42,6 +44,9 @@ services:
     volumes:
       - ./authentik/data:/data
       - ./authentik/custom-templates:/templates
+    networks:
+      - default
+      - shared-auth-network
 
   authentik-worker:
     image: ${AUTHENTIK_IMAGE:-ghcr.io/goauthentik/server}:${AUTHENTIK_TAG:-2026.8.5}
@@ -65,6 +70,14 @@ services:
       - ./authentik/data:/data
       - ./authentik/certs:/certs
       - ./authentik/custom-templates:/templates
+    networks:
+      - default
+
+networks:
+  default:
+  
+  shared-auth-network:
+    external: true
 
 volumes:
   authentik_database:

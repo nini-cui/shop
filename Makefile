@@ -1,12 +1,14 @@
+NETWORK_NAME=shared-auth-network
+
 restart:
-	docker compose down
-	docker system prune -a -f
+	docker compose down --remove-orphans
 	docker compose up --build
 
 restart-authentik:
-	docker compose -p authentik -f docker-compose.authentik.yml down
+	docker compose -p authentik -f docker-compose.authentik.yml down --remove-orphans
 	docker system prune -a -f
-	docker compose -p authentik -f docker-compose.authentik.yml up --build
+	docker network inspect $(NETWORK_NAME) >/dev/null 2>&1 || docker network create $(NETWORK_NAME)
+	docker compose -p authentik -f docker-compose.authentik.yml up --build -d
 
 remove-volumes:
 	docker system prune -a --volumes -f
