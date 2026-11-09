@@ -1,7 +1,12 @@
 restart:
 	docker compose down
 	docker system prune -a -f
-	docker compose up
+	docker compose up --build
+
+restart-authentik:
+	docker compose -p authentik -f docker-compose.authentik.yml down
+	docker system prune -a -f
+	docker compose -p authentik -f docker-compose.authentik.yml up --build
 
 remove-volumes:
 	docker system prune -a --volumes -f
