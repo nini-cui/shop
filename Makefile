@@ -32,3 +32,6 @@ rebuild-api-image:
 
 rebuild-client-image:
 	docker compose up -d --force-recreate client
+
+db-shell:
+	docker compose exec db psql -U postgres -d shop
