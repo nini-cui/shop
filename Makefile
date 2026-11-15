@@ -35,3 +35,6 @@ rebuild-client-image:
 
 db-shell:
 	docker compose exec db psql -U postgres -d shop
+
+authentik-db-shell:
+	docker compose -p authentik -f docker-compose.authentik.yml exec authentik-postgresql psql -U authentik -d authentik
