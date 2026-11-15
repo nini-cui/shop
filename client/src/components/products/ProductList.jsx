@@ -72,7 +72,7 @@ function ProductList() {
     console.log("Access Token:", token);
 
     if (!token) {
-        return;
+      return;
     }
 
     async function fetchProducts() {

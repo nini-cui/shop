@@ -13,13 +13,12 @@ bearer_scheme = HTTPBearer()
 jwks_client = PyJWKClient(JWKS_URL)
 
 
-def get_current_user(
+def verify_token(
     credentials: HTTPAuthorizationCredentials = Depends(bearer_scheme),
-    db: Session = Depends(get_db),
 ):
     token = credentials.credentials
     print("token is, ", token)
-    
+
     try:
         signing_key = jwks_client.get_signing_key_from_jwt(token)
 
@@ -28,50 +27,51 @@ def get_current_user(
             signing_key.key,
             algorithms=["RS256"],
             issuer=AUTHENTIK_ISSUER,
-            options={
-                "verify_aud": False,
-            },
+            options={"verify_aud": False},
         )
         print("payload is: ", payload)
 
+        return payload
+
     except jwt.ExpiredSignatureError:
         raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
+            status_code=401,
             detail="Token has expired",
         )
 
     except jwt.InvalidTokenError:
         raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
+            status_code=401,
             detail="Invalid access token",
         )
 
-    # Get Authentik subject
+
+def get_current_user(
+    payload: dict = Depends(verify_token),
+    db: Session = Depends(get_db),
+):
     authentik_sub = payload.get("sub")
 
     if not authentik_sub:
         raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
+            status_code=401,
             detail="Invalid token: missing subject",
         )
 
-    # Retrieve user from our database
-    user = (
+    current_user = (
         db.query(user.User)
-        .options(
-            joinedload(user.User.user_roles).joinedload(user.UserRole.role)
-        )
+        .options(joinedload(user.User.user_roles).joinedload(user.UserRole.role))
         .filter(user.User.authentik_sub == authentik_sub)
         .first()
     )
 
-    if not user:
+    if not current_user:
         raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
+            status_code=403,
             detail="User is not registered in this application",
         )
 
     for user_role in user.user_roles:
         print("user role is: ", user_role.role.name)
 
-    return user
+    return current_user
