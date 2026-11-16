@@ -38,3 +38,6 @@ db-shell:
 
 authentik-db-shell:
 	docker compose -p authentik -f docker-compose.authentik.yml exec authentik-postgresql psql -U authentik -d authentik
+
+authentik-docker-log:
+	 docker compose -p authentik -f docker-compose.authentik.yml logs --since=1m authentik-server
