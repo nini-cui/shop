@@ -1,6 +1,10 @@
+
+import { useAuth } from "react-oidc-context";
 import "./AuthPage.css";
 
 function AuthPage() {
+  const auth = useAuth();
+
   const handleSignUp = () => {
     window.location.href = "http://localhost:9000/if/flow/shop-enrollment/";
   };
@@ -14,6 +18,7 @@ function AuthPage() {
           <button
             className="auth-button login-button"
             onClick={() => auth.signinRedirect()}
+            disabled={auth.isLoading}
           >
             Login
           </button>
