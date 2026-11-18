@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException, UploadFile, File, Form, HTTPException
 import boto3, os, uuid
-from botocore.exceptions import ClientError
+from botocore.exceptions import ClientError, BotoCoreError
 from db import models
 
 router = APIRouter(prefix="/storage", tags=["Storage"])
@@ -64,11 +64,13 @@ async def upload_images(
         )
         return {"image_key": image_key}
 
-    except ClientError:
+    except (ClientError, BotoCoreError) as e:
+        print(f"S3 upload error: {type(e).__name__}: {e}")
+
         raise HTTPException(
             status_code=500,
             detail="Failed to upload image to S3",
-        )
+        ) from e
 
     finally:
         await file.close()
