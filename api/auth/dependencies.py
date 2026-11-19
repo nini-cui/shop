@@ -71,7 +71,7 @@ def get_current_user(
             detail="User is not registered in this application",
         )
 
-    for user_role in user.user_roles:
+    for user_role in current_user.user_roles:
         print("user role is: ", user_role.role.name)
 
     return current_user
