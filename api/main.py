@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from api.routes import categories, products, storage
+from api.routes import categories, products, storage, users
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
@@ -15,3 +15,4 @@ app.add_middleware(
 app.include_router(categories.router)
 app.include_router(products.router)
 app.include_router(storage.router)
+app.include_router(users.router)
