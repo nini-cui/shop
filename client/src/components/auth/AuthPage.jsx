@@ -1,4 +1,3 @@
-
 import { useAuth } from "react-oidc-context";
 import "./AuthPage.css";
 
@@ -23,10 +22,7 @@ function AuthPage() {
             Login
           </button>
 
-          <button
-            className="auth-button signup-button"
-            onClick={handleSignUp}
-          >
+          <button className="auth-button signup-button" onClick={handleSignUp}>
             Sign Up
           </button>
         </div>
