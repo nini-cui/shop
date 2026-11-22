@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session, selectinload
-from schema import product
+from schema import product, user
 from db import deps, models
 from sqlalchemy import select
 from slugify import slugify
@@ -10,6 +10,10 @@ from api.auth import dependencies
 
 router = APIRouter(prefix="/products", tags=["Products"])
 BUCKET_NAME = os.environ["BUCKET_NAME"]
+
+BUYER_ROLE = "buyer"
+SELLER_ROLE = "seller"
+ADMIN_ROLE = "admin"
 
 
 def generate_presigned_url(image_key: str):
@@ -87,11 +91,8 @@ def add_product(payload: models.ProductCreate, db: Session = Depends(deps.get_db
 @router.get("/", response_model=models.ProductListResponse)
 def list_products(
     filters: Annotated[models.ProductList, Query()],
-    current_user: dict = Depends(dependencies.get_current_user),
     db: Session = Depends(deps.get_db),
 ):
-    # TO DO: validate user
-    print("current user, ", current_user)
     query = select(product.Product).options(selectinload(product.Product.images))
 
     if filters.min_price is not None:

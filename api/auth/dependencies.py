@@ -75,3 +75,17 @@ def get_current_user(
         print("user role is: ", user_role.role.name)
 
     return current_user
+
+
+def require_roles(*allowed_roles):
+    def role_checker(
+        current_user: user.User = Depends(get_current_user),
+    ):
+        user_roles = {user_role.role.name for user_role in current_user.user_roles}
+
+        if not user_roles.intersection(allowed_roles):
+            raise HTTPException(status_code=403)
+
+        return current_user
+
+    return role_checker
