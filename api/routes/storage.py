@@ -10,7 +10,7 @@ from fastapi import (
 import boto3, os, uuid
 from botocore.exceptions import ClientError, BotoCoreError
 from db import models
-from auth import dependencies
+from api.auth import dependencies
 from api import constants
 
 router = APIRouter(prefix="/storage", tags=["Storage"])

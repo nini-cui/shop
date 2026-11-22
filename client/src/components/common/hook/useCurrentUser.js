@@ -11,19 +11,6 @@ function useCurrentUser() {
         Authorization: `Bearer ${accessToken}`,
       };
 
-      //   TODO: FIX THE LOGIC HERE
-      const createUserResponse = await fetch(
-        "http://localhost:8000/users/create_user",
-        {
-          method: "POST",
-          headers,
-        },
-      );
-
-      if (!createUserResponse.ok) {
-        throw new Error("Failed to create user");
-      }
-
       // Retrieve the application user and their roles
       const response = await fetch("http://localhost:8000/users/me", {
         headers,
