@@ -1,7 +1,17 @@
-from fastapi import APIRouter, HTTPException, UploadFile, File, Form, HTTPException
+from fastapi import (
+    APIRouter,
+    HTTPException,
+    UploadFile,
+    File,
+    Form,
+    HTTPException,
+    Depends,
+)
 import boto3, os, uuid
 from botocore.exceptions import ClientError, BotoCoreError
 from db import models
+from auth import dependencies
+from api import constants
 
 router = APIRouter(prefix="/storage", tags=["Storage"])
 
@@ -11,7 +21,9 @@ BUCKET_NAME = os.environ["BUCKET_NAME"]
 s3 = boto3.client("s3", region_name=AWS_REGION)
 
 
-@router.post("/buckets")
+@router.post(
+    "/buckets", dependencies=[Depends(dependencies.require_roles(constants.ADMIN_ROLE))]
+)
 def create_buckets(payload: models.BucketCreate):
     bucket_name = payload.bucket_name or BUCKET_NAME
 
@@ -36,7 +48,12 @@ def create_buckets(payload: models.BucketCreate):
         )
 
 
-@router.post("/images")
+@router.post(
+    "/images",
+    dependencies=[
+        Depends(dependencies.require_roles(constants.SELLER_ROLE, constants.ADMIN_ROLE))
+    ],
+)
 async def upload_images(
     file: UploadFile = File(...),
     bucket_name: str = Form(...),

@@ -1,19 +1,15 @@
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session, selectinload
-from schema import product, user
+from schema import product
 from db import deps, models
 from sqlalchemy import select
 from slugify import slugify
 from typing import Annotated
-import boto3, os
+import boto3
 from api.auth import dependencies
+from api import constants
 
 router = APIRouter(prefix="/products", tags=["Products"])
-BUCKET_NAME = os.environ["BUCKET_NAME"]
-
-BUYER_ROLE = "buyer"
-SELLER_ROLE = "seller"
-ADMIN_ROLE = "admin"
 
 
 def generate_presigned_url(image_key: str):
@@ -22,14 +18,19 @@ def generate_presigned_url(image_key: str):
     return s3_client.generate_presigned_url(
         "get_object",
         Params={
-            "Bucket": BUCKET_NAME,
+            "Bucket": constants.BUCKET_NAME,
             "Key": image_key,
         },
         ExpiresIn=900,
     )
 
 
-@router.post("/")
+@router.post(
+    "/",
+    dependencies=[
+        Depends(dependencies.require_roles(constants.SELLER_ROLE, constants.ADMIN_ROLE))
+    ],
+)
 def add_product(payload: models.ProductCreate, db: Session = Depends(deps.get_db)):
 
     # step 1: check if all passed category ids are created
